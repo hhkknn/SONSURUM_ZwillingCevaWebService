@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:element name="SendOrderToUPS">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="login" type="tns:UPSLogin" />
+            <s:element minOccurs="0" maxOccurs="1" name="UpsData" type="tns:ArrayOfUPSSendOrderRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="UPSLogin">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="MusteriKodu" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="KullaniciKodu" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Sifre" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfUPSSendOrderRequest">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="UPSSendOrderRequest" nillable="true" type="tns:UPSSendOrderRequest" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="UPSSendOrderRequest">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="ShipperAccountNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ShipperName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ShipperContactName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ShipperAddress" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="ShipperCityCode" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="ShipperAreaCode" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="ShipperPhoneNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ShipperEMail" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ShipperExpenseCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ConsigneeAccountNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ConsigneeName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ConsigneeContactName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ConsigneeAddress" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="ConsigneeCityCode" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="ConsigneeAreaCode" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="ConsigneePhoneNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ConsigneeEMail" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ConsigneeExpenseCode" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="ServiceLevel" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="PaymentType" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="PackageType" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="NumberOfPackages" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="CustomerReferance" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CustomerInvoiceNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DescriptionOfGoods" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DeliveryNotificationEmail" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="SendOrderToUPSResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SendOrderToUPSResult" type="tns:ArrayOfUPSOrderResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfUPSOrderResponse">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="UPSOrderResponse" nillable="true" type="tns:UPSOrderResponse" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="UPSOrderResponse">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="BarkodArrayPng" type="tns:ArrayOfString" />
+          <s:element minOccurs="0" maxOccurs="1" name="ShipmentNo" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="LinkForLabelPrinting" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="ErrorCode" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="ErrorDefinition" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfString">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="CancelOrderToUPS">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="login" type="tns:UPSLogin" />
+            <s:element minOccurs="0" maxOccurs="1" name="cancelOrderData" type="tns:UPSCancelOrder" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="UPSCancelOrder" />
+      <s:element name="CancelOrderToUPSResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CancelOrderToUPSResult" type="tns:UPSCancelOrderResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="UPSCancelOrderResponse">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ErrorCode" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="ErrorDefinition" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="SendOrderToYK">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="login" type="tns:YKLogin" />
+            <s:element minOccurs="0" maxOccurs="1" name="ykData" type="tns:ArrayOfYKSendOrderRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="YKLogin">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="userLanguage" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="wsPassword" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="wsUserName" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfYKSendOrderRequest">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="YKSendOrderRequest" nillable="true" type="tns:YKSendOrderRequest" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="YKSendOrderRequest">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="cargoKey" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="invoiceKey" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="receiverCustName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="receiverAddress" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="cityName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="townName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="receiverPhone1" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="receiverPhone2" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="receiverPhone3" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="emailAddress" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="taxOfficeId" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="taxNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="taxOfficeName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="desi" type="s:double" />
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="kg" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="cargoCount" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="waybillNo" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="specialField1" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="specialField2" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="specialField3" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="ttInvoiceAmount" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="ttDocumentId" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="ttCollectionType" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="ttDocumentSaveType" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="dcSelectedCredit" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" form="unqualified" name="dcCreditRule" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="description" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="orgGeoCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="privilegeOrder" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="custProdId" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="orgReceiverCustId" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="SendOrderToYKResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SendOrderToYKResult" type="tns:ArrayOfYKOrderResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfYKOrderResponse">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="YKOrderResponse" nillable="true" type="tns:YKOrderResponse" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="YKOrderResponse">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="OutResult" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="OutFlag" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="jobId" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="count" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="errCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Details" type="tns:Details" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Details">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="CargoKey" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="ErrCode" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="ErrDesc" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="CancelOrderToYK">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="login" type="tns:YKLogin" />
+            <s:element minOccurs="0" maxOccurs="1" name="ykData" type="tns:ArrayOfYKCancelOrderRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfYKCancelOrderRequest">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="YKCancelOrderRequest" nillable="true" type="tns:YKCancelOrderRequest" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="YKCancelOrderRequest">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="CargoKey" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="CancelOrderToYKResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CancelOrderToYKResult" type="tns:ArrayOfYKCancelOrderResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfYKCancelOrderResponse">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="YKCancelOrderResponse" nillable="true" type="tns:YKCancelOrderResponse" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="YKCancelOrderResponse">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="OutResult" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="OutFlag" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="jobId" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="count" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="errCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Details" type="tns:CancelDetails" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="CancelDetails">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="CargoKey" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="ErrCode" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="ErrDesc" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="invoiceKey" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="docId" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="operationCode" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="operationStatus" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="operationMessage" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="CreatePDF">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="docEntry" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreatePDFResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CreatePDFResult" type="tns:Crystal" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="Crystal">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Val" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Desc" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Path" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="SendOrderToUPSSoapIn">
+    <wsdl:part name="parameters" element="tns:SendOrderToUPS" />
+  </wsdl:message>
+  <wsdl:message name="SendOrderToUPSSoapOut">
+    <wsdl:part name="parameters" element="tns:SendOrderToUPSResponse" />
+  </wsdl:message>
+  <wsdl:message name="CancelOrderToUPSSoapIn">
+    <wsdl:part name="parameters" element="tns:CancelOrderToUPS" />
+  </wsdl:message>
+  <wsdl:message name="CancelOrderToUPSSoapOut">
+    <wsdl:part name="parameters" element="tns:CancelOrderToUPSResponse" />
+  </wsdl:message>
+  <wsdl:message name="SendOrderToYKSoapIn">
+    <wsdl:part name="parameters" element="tns:SendOrderToYK" />
+  </wsdl:message>
+  <wsdl:message name="SendOrderToYKSoapOut">
+    <wsdl:part name="parameters" element="tns:SendOrderToYKResponse" />
+  </wsdl:message>
+  <wsdl:message name="CancelOrderToYKSoapIn">
+    <wsdl:part name="parameters" element="tns:CancelOrderToYK" />
+  </wsdl:message>
+  <wsdl:message name="CancelOrderToYKSoapOut">
+    <wsdl:part name="parameters" element="tns:CancelOrderToYKResponse" />
+  </wsdl:message>
+  <wsdl:message name="CreatePDFSoapIn">
+    <wsdl:part name="parameters" element="tns:CreatePDF" />
+  </wsdl:message>
+  <wsdl:message name="CreatePDFSoapOut">
+    <wsdl:part name="parameters" element="tns:CreatePDFResponse" />
+  </wsdl:message>
+  <wsdl:portType name="AIFCargoWebServicesSoap">
+    <wsdl:operation name="SendOrderToUPS">
+      <wsdl:input message="tns:SendOrderToUPSSoapIn" />
+      <wsdl:output message="tns:SendOrderToUPSSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CancelOrderToUPS">
+      <wsdl:input message="tns:CancelOrderToUPSSoapIn" />
+      <wsdl:output message="tns:CancelOrderToUPSSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SendOrderToYK">
+      <wsdl:input message="tns:SendOrderToYKSoapIn" />
+      <wsdl:output message="tns:SendOrderToYKSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CancelOrderToYK">
+      <wsdl:input message="tns:CancelOrderToYKSoapIn" />
+      <wsdl:output message="tns:CancelOrderToYKSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CreatePDF">
+      <wsdl:input message="tns:CreatePDFSoapIn" />
+      <wsdl:output message="tns:CreatePDFSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="AIFCargoWebServicesSoap" type="tns:AIFCargoWebServicesSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="SendOrderToUPS">
+      <soap:operation soapAction="http://tempuri.org/SendOrderToUPS" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CancelOrderToUPS">
+      <soap:operation soapAction="http://tempuri.org/CancelOrderToUPS" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SendOrderToYK">
+      <soap:operation soapAction="http://tempuri.org/SendOrderToYK" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CancelOrderToYK">
+      <soap:operation soapAction="http://tempuri.org/CancelOrderToYK" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreatePDF">
+      <soap:operation soapAction="http://tempuri.org/CreatePDF" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="AIFCargoWebServicesSoap12" type="tns:AIFCargoWebServicesSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="SendOrderToUPS">
+      <soap12:operation soapAction="http://tempuri.org/SendOrderToUPS" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CancelOrderToUPS">
+      <soap12:operation soapAction="http://tempuri.org/CancelOrderToUPS" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SendOrderToYK">
+      <soap12:operation soapAction="http://tempuri.org/SendOrderToYK" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CancelOrderToYK">
+      <soap12:operation soapAction="http://tempuri.org/CancelOrderToYK" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreatePDF">
+      <soap12:operation soapAction="http://tempuri.org/CreatePDF" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="AIFCargoWebServices">
+    <wsdl:port name="AIFCargoWebServicesSoap" binding="tns:AIFCargoWebServicesSoap">
+      <soap:address location="http://10.24.100.6:91/AIFCargoWebServices.asmx" />
+    </wsdl:port>
+    <wsdl:port name="AIFCargoWebServicesSoap12" binding="tns:AIFCargoWebServicesSoap12">
+      <soap12:address location="http://10.24.100.6:91/AIFCargoWebServices.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
