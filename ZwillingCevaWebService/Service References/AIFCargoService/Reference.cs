@@ -49,10 +49,17 @@ namespace ZwillingCevaWebService.AIFCargoService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/CreatePDF", ReplyAction="*")]
         System.Threading.Tasks.Task<ZwillingCevaWebService.AIFCargoService.Crystal> CreatePDFAsync(string docEntry);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/CreateOrderToMNG", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        ZwillingCevaWebService.AIFCargoService.MNGCreateOrderResponse[] CreateOrderToMNG(ZwillingCevaWebService.AIFCargoService.MNGTokenRequest mngTokenRequest, ZwillingCevaWebService.AIFCargoService.MNGCreateOrderRequest[] mngCreateOrderRequest);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/CreateOrderToMNG", ReplyAction="*")]
+        System.Threading.Tasks.Task<ZwillingCevaWebService.AIFCargoService.MNGCreateOrderResponse[]> CreateOrderToMNGAsync(ZwillingCevaWebService.AIFCargoService.MNGTokenRequest mngTokenRequest, ZwillingCevaWebService.AIFCargoService.MNGCreateOrderRequest[] mngCreateOrderRequest);
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9037.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -112,7 +119,805 @@ namespace ZwillingCevaWebService.AIFCargoService {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9037.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://tempuri.org/")]
+    public partial class Error : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string codeField;
+        
+        private string messageField;
+        
+        private string descriptionField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public string code {
+            get {
+                return this.codeField;
+            }
+            set {
+                this.codeField = value;
+                this.RaisePropertyChanged("code");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public string message {
+            get {
+                return this.messageField;
+            }
+            set {
+                this.messageField = value;
+                this.RaisePropertyChanged("message");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public string description {
+            get {
+                return this.descriptionField;
+            }
+            set {
+                this.descriptionField = value;
+                this.RaisePropertyChanged("description");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://tempuri.org/")]
+    public partial class MNGCreateOrderResponse : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string orderInvoiceIdField;
+        
+        private string orderInvoiceDetailIdField;
+        
+        private string shipperBranchCodeField;
+        
+        private Error[] errorsField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public string orderInvoiceId {
+            get {
+                return this.orderInvoiceIdField;
+            }
+            set {
+                this.orderInvoiceIdField = value;
+                this.RaisePropertyChanged("orderInvoiceId");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public string orderInvoiceDetailId {
+            get {
+                return this.orderInvoiceDetailIdField;
+            }
+            set {
+                this.orderInvoiceDetailIdField = value;
+                this.RaisePropertyChanged("orderInvoiceDetailId");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public string shipperBranchCode {
+            get {
+                return this.shipperBranchCodeField;
+            }
+            set {
+                this.shipperBranchCodeField = value;
+                this.RaisePropertyChanged("shipperBranchCode");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(Order=3)]
+        public Error[] errors {
+            get {
+                return this.errorsField;
+            }
+            set {
+                this.errorsField = value;
+                this.RaisePropertyChanged("errors");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://tempuri.org/")]
+    public partial class Recipient : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private int customerIdField;
+        
+        private string refCustomerIdField;
+        
+        private int cityCodeField;
+        
+        private string cityNameField;
+        
+        private string districtNameField;
+        
+        private int districtCodeField;
+        
+        private string addressField;
+        
+        private string bussinessPhoneNumberField;
+        
+        private string emailField;
+        
+        private string taxOfficeField;
+        
+        private string taxNumberField;
+        
+        private string fullNameField;
+        
+        private string homePhoneNumberField;
+        
+        private string mobilePhoneNumberField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public int customerId {
+            get {
+                return this.customerIdField;
+            }
+            set {
+                this.customerIdField = value;
+                this.RaisePropertyChanged("customerId");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public string refCustomerId {
+            get {
+                return this.refCustomerIdField;
+            }
+            set {
+                this.refCustomerIdField = value;
+                this.RaisePropertyChanged("refCustomerId");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public int cityCode {
+            get {
+                return this.cityCodeField;
+            }
+            set {
+                this.cityCodeField = value;
+                this.RaisePropertyChanged("cityCode");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+        public string cityName {
+            get {
+                return this.cityNameField;
+            }
+            set {
+                this.cityNameField = value;
+                this.RaisePropertyChanged("cityName");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
+        public string districtName {
+            get {
+                return this.districtNameField;
+            }
+            set {
+                this.districtNameField = value;
+                this.RaisePropertyChanged("districtName");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
+        public int districtCode {
+            get {
+                return this.districtCodeField;
+            }
+            set {
+                this.districtCodeField = value;
+                this.RaisePropertyChanged("districtCode");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
+        public string address {
+            get {
+                return this.addressField;
+            }
+            set {
+                this.addressField = value;
+                this.RaisePropertyChanged("address");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=7)]
+        public string bussinessPhoneNumber {
+            get {
+                return this.bussinessPhoneNumberField;
+            }
+            set {
+                this.bussinessPhoneNumberField = value;
+                this.RaisePropertyChanged("bussinessPhoneNumber");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=8)]
+        public string email {
+            get {
+                return this.emailField;
+            }
+            set {
+                this.emailField = value;
+                this.RaisePropertyChanged("email");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=9)]
+        public string taxOffice {
+            get {
+                return this.taxOfficeField;
+            }
+            set {
+                this.taxOfficeField = value;
+                this.RaisePropertyChanged("taxOffice");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=10)]
+        public string taxNumber {
+            get {
+                return this.taxNumberField;
+            }
+            set {
+                this.taxNumberField = value;
+                this.RaisePropertyChanged("taxNumber");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=11)]
+        public string fullName {
+            get {
+                return this.fullNameField;
+            }
+            set {
+                this.fullNameField = value;
+                this.RaisePropertyChanged("fullName");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=12)]
+        public string homePhoneNumber {
+            get {
+                return this.homePhoneNumberField;
+            }
+            set {
+                this.homePhoneNumberField = value;
+                this.RaisePropertyChanged("homePhoneNumber");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=13)]
+        public string mobilePhoneNumber {
+            get {
+                return this.mobilePhoneNumberField;
+            }
+            set {
+                this.mobilePhoneNumberField = value;
+                this.RaisePropertyChanged("mobilePhoneNumber");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://tempuri.org/")]
+    public partial class OrderPieceList : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string barcodeField;
+        
+        private int desiField;
+        
+        private int kgField;
+        
+        private string contentField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public string barcode {
+            get {
+                return this.barcodeField;
+            }
+            set {
+                this.barcodeField = value;
+                this.RaisePropertyChanged("barcode");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public int desi {
+            get {
+                return this.desiField;
+            }
+            set {
+                this.desiField = value;
+                this.RaisePropertyChanged("desi");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public int kg {
+            get {
+                return this.kgField;
+            }
+            set {
+                this.kgField = value;
+                this.RaisePropertyChanged("kg");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+        public string content {
+            get {
+                return this.contentField;
+            }
+            set {
+                this.contentField = value;
+                this.RaisePropertyChanged("content");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://tempuri.org/")]
+    public partial class Order : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string referenceIdField;
+        
+        private string barcodeField;
+        
+        private string billOfLandingIdField;
+        
+        private int isCODField;
+        
+        private int codAmountField;
+        
+        private int shipmentServiceTypeField;
+        
+        private int packagingTypeField;
+        
+        private string contentField;
+        
+        private int smsPreference1Field;
+        
+        private int smsPreference2Field;
+        
+        private int smsPreference3Field;
+        
+        private int paymentTypeField;
+        
+        private int deliveryTypeField;
+        
+        private string descriptionField;
+        
+        private string marketPlaceShortCodeField;
+        
+        private string marketPlaceSaleCodeField;
+        
+        private string pudoIdField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public string referenceId {
+            get {
+                return this.referenceIdField;
+            }
+            set {
+                this.referenceIdField = value;
+                this.RaisePropertyChanged("referenceId");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public string barcode {
+            get {
+                return this.barcodeField;
+            }
+            set {
+                this.barcodeField = value;
+                this.RaisePropertyChanged("barcode");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public string billOfLandingId {
+            get {
+                return this.billOfLandingIdField;
+            }
+            set {
+                this.billOfLandingIdField = value;
+                this.RaisePropertyChanged("billOfLandingId");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+        public int isCOD {
+            get {
+                return this.isCODField;
+            }
+            set {
+                this.isCODField = value;
+                this.RaisePropertyChanged("isCOD");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
+        public int codAmount {
+            get {
+                return this.codAmountField;
+            }
+            set {
+                this.codAmountField = value;
+                this.RaisePropertyChanged("codAmount");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
+        public int shipmentServiceType {
+            get {
+                return this.shipmentServiceTypeField;
+            }
+            set {
+                this.shipmentServiceTypeField = value;
+                this.RaisePropertyChanged("shipmentServiceType");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
+        public int packagingType {
+            get {
+                return this.packagingTypeField;
+            }
+            set {
+                this.packagingTypeField = value;
+                this.RaisePropertyChanged("packagingType");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=7)]
+        public string content {
+            get {
+                return this.contentField;
+            }
+            set {
+                this.contentField = value;
+                this.RaisePropertyChanged("content");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=8)]
+        public int smsPreference1 {
+            get {
+                return this.smsPreference1Field;
+            }
+            set {
+                this.smsPreference1Field = value;
+                this.RaisePropertyChanged("smsPreference1");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=9)]
+        public int smsPreference2 {
+            get {
+                return this.smsPreference2Field;
+            }
+            set {
+                this.smsPreference2Field = value;
+                this.RaisePropertyChanged("smsPreference2");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=10)]
+        public int smsPreference3 {
+            get {
+                return this.smsPreference3Field;
+            }
+            set {
+                this.smsPreference3Field = value;
+                this.RaisePropertyChanged("smsPreference3");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=11)]
+        public int paymentType {
+            get {
+                return this.paymentTypeField;
+            }
+            set {
+                this.paymentTypeField = value;
+                this.RaisePropertyChanged("paymentType");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=12)]
+        public int deliveryType {
+            get {
+                return this.deliveryTypeField;
+            }
+            set {
+                this.deliveryTypeField = value;
+                this.RaisePropertyChanged("deliveryType");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=13)]
+        public string description {
+            get {
+                return this.descriptionField;
+            }
+            set {
+                this.descriptionField = value;
+                this.RaisePropertyChanged("description");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=14)]
+        public string marketPlaceShortCode {
+            get {
+                return this.marketPlaceShortCodeField;
+            }
+            set {
+                this.marketPlaceShortCodeField = value;
+                this.RaisePropertyChanged("marketPlaceShortCode");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=15)]
+        public string marketPlaceSaleCode {
+            get {
+                return this.marketPlaceSaleCodeField;
+            }
+            set {
+                this.marketPlaceSaleCodeField = value;
+                this.RaisePropertyChanged("marketPlaceSaleCode");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=16)]
+        public string pudoId {
+            get {
+                return this.pudoIdField;
+            }
+            set {
+                this.pudoIdField = value;
+                this.RaisePropertyChanged("pudoId");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://tempuri.org/")]
+    public partial class MNGCreateOrderRequest : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private Order orderField;
+        
+        private OrderPieceList[] orderPieceListField;
+        
+        private Recipient recipientField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public Order order {
+            get {
+                return this.orderField;
+            }
+            set {
+                this.orderField = value;
+                this.RaisePropertyChanged("order");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(Order=1)]
+        public OrderPieceList[] orderPieceList {
+            get {
+                return this.orderPieceListField;
+            }
+            set {
+                this.orderPieceListField = value;
+                this.RaisePropertyChanged("orderPieceList");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public Recipient recipient {
+            get {
+                return this.recipientField;
+            }
+            set {
+                this.recipientField = value;
+                this.RaisePropertyChanged("recipient");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://tempuri.org/")]
+    public partial class MNGTokenRequest : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string customerNumberField;
+        
+        private string passwordField;
+        
+        private string identityTypeField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public string customerNumber {
+            get {
+                return this.customerNumberField;
+            }
+            set {
+                this.customerNumberField = value;
+                this.RaisePropertyChanged("customerNumber");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public string password {
+            get {
+                return this.passwordField;
+            }
+            set {
+                this.passwordField = value;
+                this.RaisePropertyChanged("password");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public string identityType {
+            get {
+                return this.identityTypeField;
+            }
+            set {
+                this.identityTypeField = value;
+                this.RaisePropertyChanged("identityType");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -172,7 +977,7 @@ namespace ZwillingCevaWebService.AIFCargoService {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9037.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -302,7 +1107,7 @@ namespace ZwillingCevaWebService.AIFCargoService {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9037.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -404,7 +1209,7 @@ namespace ZwillingCevaWebService.AIFCargoService {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9037.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -436,7 +1241,7 @@ namespace ZwillingCevaWebService.AIFCargoService {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9037.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -496,7 +1301,7 @@ namespace ZwillingCevaWebService.AIFCargoService {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9037.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -598,7 +1403,7 @@ namespace ZwillingCevaWebService.AIFCargoService {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9037.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -1092,7 +1897,7 @@ namespace ZwillingCevaWebService.AIFCargoService {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9037.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -1152,7 +1957,7 @@ namespace ZwillingCevaWebService.AIFCargoService {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9037.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -1198,7 +2003,7 @@ namespace ZwillingCevaWebService.AIFCargoService {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9037.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -1216,7 +2021,7 @@ namespace ZwillingCevaWebService.AIFCargoService {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9037.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -1304,7 +2109,7 @@ namespace ZwillingCevaWebService.AIFCargoService {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9037.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -1750,6 +2555,14 @@ namespace ZwillingCevaWebService.AIFCargoService {
         
         public System.Threading.Tasks.Task<ZwillingCevaWebService.AIFCargoService.Crystal> CreatePDFAsync(string docEntry) {
             return base.Channel.CreatePDFAsync(docEntry);
+        }
+        
+        public ZwillingCevaWebService.AIFCargoService.MNGCreateOrderResponse[] CreateOrderToMNG(ZwillingCevaWebService.AIFCargoService.MNGTokenRequest mngTokenRequest, ZwillingCevaWebService.AIFCargoService.MNGCreateOrderRequest[] mngCreateOrderRequest) {
+            return base.Channel.CreateOrderToMNG(mngTokenRequest, mngCreateOrderRequest);
+        }
+        
+        public System.Threading.Tasks.Task<ZwillingCevaWebService.AIFCargoService.MNGCreateOrderResponse[]> CreateOrderToMNGAsync(ZwillingCevaWebService.AIFCargoService.MNGTokenRequest mngTokenRequest, ZwillingCevaWebService.AIFCargoService.MNGCreateOrderRequest[] mngCreateOrderRequest) {
+            return base.Channel.CreateOrderToMNGAsync(mngTokenRequest, mngCreateOrderRequest);
         }
     }
 }

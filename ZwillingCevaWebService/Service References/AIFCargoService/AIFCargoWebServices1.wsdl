@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<wsdl:definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+<wsdl:definitions xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:tns="http://tempuri.org/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
   <wsdl:types>
     <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
       <s:element name="SendOrderToUPS">
@@ -257,6 +257,117 @@
           <s:element minOccurs="0" maxOccurs="1" name="Path" type="s:string" />
         </s:sequence>
       </s:complexType>
+      <s:element name="CreateOrderToMNG">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="mngTokenRequest" type="tns:MNGTokenRequest" />
+            <s:element minOccurs="0" maxOccurs="1" name="mngCreateOrderRequest" type="tns:ArrayOfMNGCreateOrderRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="MNGTokenRequest">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="customerNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="identityType" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfMNGCreateOrderRequest">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="MNGCreateOrderRequest" nillable="true" type="tns:MNGCreateOrderRequest" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="MNGCreateOrderRequest">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="order" type="tns:Order" />
+          <s:element minOccurs="0" maxOccurs="1" name="orderPieceList" type="tns:ArrayOfOrderPieceList" />
+          <s:element minOccurs="0" maxOccurs="1" name="recipient" type="tns:Recipient" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Order">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="referenceId" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="barcode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="billOfLandingId" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="isCOD" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="codAmount" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="shipmentServiceType" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="packagingType" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="content" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="smsPreference1" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="smsPreference2" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="smsPreference3" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="paymentType" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="deliveryType" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="description" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="marketPlaceShortCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="marketPlaceSaleCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="pudoId" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfOrderPieceList">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="OrderPieceList" nillable="true" type="tns:OrderPieceList" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="OrderPieceList">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="barcode" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="desi" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="kg" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="content" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Recipient">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="customerId" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="refCustomerId" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="cityCode" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="cityName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="districtName" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="districtCode" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="address" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="bussinessPhoneNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="email" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="taxOffice" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="taxNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="fullName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="homePhoneNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="mobilePhoneNumber" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="CreateOrderToMNGResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CreateOrderToMNGResult" type="tns:ArrayOfMNGCreateOrderResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfMNGCreateOrderResponse">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="MNGCreateOrderResponse" nillable="true" type="tns:MNGCreateOrderResponse" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="MNGCreateOrderResponse">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="orderInvoiceId" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="orderInvoiceDetailId" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="shipperBranchCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="errors" type="tns:ArrayOfError" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfError">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Error" nillable="true" type="tns:Error" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Error">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="code" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="message" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="description" type="s:string" />
+        </s:sequence>
+      </s:complexType>
     </s:schema>
   </wsdl:types>
   <wsdl:message name="SendOrderToUPSSoapIn">
@@ -289,6 +400,12 @@
   <wsdl:message name="CreatePDFSoapOut">
     <wsdl:part name="parameters" element="tns:CreatePDFResponse" />
   </wsdl:message>
+  <wsdl:message name="CreateOrderToMNGSoapIn">
+    <wsdl:part name="parameters" element="tns:CreateOrderToMNG" />
+  </wsdl:message>
+  <wsdl:message name="CreateOrderToMNGSoapOut">
+    <wsdl:part name="parameters" element="tns:CreateOrderToMNGResponse" />
+  </wsdl:message>
   <wsdl:portType name="AIFCargoWebServicesSoap">
     <wsdl:operation name="SendOrderToUPS">
       <wsdl:input message="tns:SendOrderToUPSSoapIn" />
@@ -309,6 +426,10 @@
     <wsdl:operation name="CreatePDF">
       <wsdl:input message="tns:CreatePDFSoapIn" />
       <wsdl:output message="tns:CreatePDFSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateOrderToMNG">
+      <wsdl:input message="tns:CreateOrderToMNGSoapIn" />
+      <wsdl:output message="tns:CreateOrderToMNGSoapOut" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="AIFCargoWebServicesSoap" type="tns:AIFCargoWebServicesSoap">
@@ -351,6 +472,15 @@
     </wsdl:operation>
     <wsdl:operation name="CreatePDF">
       <soap:operation soapAction="http://tempuri.org/CreatePDF" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateOrderToMNG">
+      <soap:operation soapAction="http://tempuri.org/CreateOrderToMNG" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -406,13 +536,22 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="CreateOrderToMNG">
+      <soap12:operation soapAction="http://tempuri.org/CreateOrderToMNG" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
   </wsdl:binding>
   <wsdl:service name="AIFCargoWebServices">
     <wsdl:port name="AIFCargoWebServicesSoap" binding="tns:AIFCargoWebServicesSoap">
-      <soap:address location="http://10.24.100.6:91/AIFCargoWebServices.asmx" />
+      <soap:address location="https://localhost:44316/AIFCargoWebServices.asmx" />
     </wsdl:port>
     <wsdl:port name="AIFCargoWebServicesSoap12" binding="tns:AIFCargoWebServicesSoap12">
-      <soap12:address location="http://10.24.100.6:91/AIFCargoWebServices.asmx" />
+      <soap12:address location="https://localhost:44316/AIFCargoWebServices.asmx" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>
