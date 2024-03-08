@@ -69,15 +69,15 @@
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile2.pubxml" />
     <None Include="Properties\PublishProfiles\Test.pubxml" />
-    <None Include="Service References\AIFCargoService\AIFCargoWebServices1.wsdl" />
-    <None Include="Service References\AIFCargoService\configuration91.svcinfo" />
-    <None Include="Service References\AIFCargoService\configuration.svcinfo" />
-    <None Include="Service References\AIFCargoService\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="Service References\AIFCargoService\AIFCargoWebServices1.disco" />
+    <None Include="Service References\AIFCargoService\AIFCargoWebServices.wsdl" />
     <Content Include="Service References\AIFCargoService\ZwillingCevaWebService.AIFCargoService.Crystal.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\AIFCargoService\ZwillingCevaWebService.AIFCargoService.MNGCreateOrderResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Content>
     <Content Include="Service References\AIFCargoService\ZwillingCevaWebService.AIFCargoService.UPSCancelOrderResponse.datasource">
@@ -92,10 +92,14 @@
     <Content Include="Service References\AIFCargoService\ZwillingCevaWebService.AIFCargoService.YKOrderResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Content>
-    <Content Include="Service References\AIFCargoService\ZwillingCevaWebService.AIFCargoService.MNGCreateOrderResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </Content>
     <None Include="Service References\CevaWMSQa\service1.disco" />
+    <None Include="Service References\AIFCargoService\AIFCargoWebServices.disco" />
+    <None Include="Service References\AIFCargoService\configuration91.svcinfo" />
+    <None Include="Service References\AIFCargoService\configuration.svcinfo" />
+    <None Include="Service References\AIFCargoService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
     <Content Include="Service References\CevaWMSQa\ZwillingCevaWebService.CevaWMSQa.GetOrderStatusResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Content>
@@ -142,6 +146,11 @@
     <Compile Include="Models\SalesOrderResponse.cs" />
     <Compile Include="Models\StockTransfer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="SAPLayer\AddStockTransfer.cs" />
     <Compile Include="SAPLayer\CreateGoodIssue.cs" />
     <Compile Include="SAPLayer\CreateGoodReciept.cs" />
@@ -167,7 +176,6 @@
       <SubType>Component</SubType>
     </Compile>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>

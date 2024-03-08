@@ -315,68 +315,74 @@ namespace ZwillingCevaWebService.SAPLayer
                                 List<AIFCargoService.OrderPieceList> orderPieceList = new List<AIFCargoService.OrderPieceList>();
 
                                 AIFCargoService.MNGTokenRequest login = new AIFCargoService.MNGTokenRequest();
+                                #region MNG TEST ORTAM
                                 login.customerNumber = "251871723";
                                 login.password = "251871723..!!";
-                                login.identityType = "1";
+                                login.identityType = "1"; 
+                                #endregion
                                 SAPbobsCOM.Recordset oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
 
-                                string ORDR = "select  T0.DocEntry,T0.DocNum,T0.DocType,CONVERT(VARCHAR, T0.DocDate, 112) as DocDate,CONVERT(VARCHAR, T0.DocDueDate, 112) as DocDueDate,T0.DocCur,T0.DocRate,T0.DocStatus,T0.CardCode,T0.CardName,T0.Address,T0.Address2,T0.NumAtCard,T0.DiscPrcnt,T0.DiscSum,T0.DiscSumFC,T0.Ref1,T0.Ref2,T0.Comments,T0.TrnspCode,CONVERT(VARCHAR, T0.TaxDate, 112) as TaxDate,T0.ShipToCode,T0.U_AliciAdi,T0.U_AliciTelefon, (T1.StreetS + ' ' + T1.CountyS +'/' + T1.CityS) Adres,T1.CityS as \"İl\",T1.CountyS as \"İlce\" from ORDR AS T0 INNER JOIN RDR12 T1 ON T0.[DocEntry] = T1.[DocEntry] Where ISNULL(T0.U_AktarimDurum,'')!='2' and T0.DocEntry='" + OrderNo + "' and ISNULL(T0.U_TrackingNo,'')='' order by T0.DocEntry Desc ";
+                                string ORDR = "select  T0.DocEntry,T0.DocNum,T0.DocType,CONVERT(VARCHAR, T0.DocDate, 112) as DocDate,CONVERT(VARCHAR, T0.DocDueDate, 112) as DocDueDate,T0.DocCur,T0.DocRate,T0.DocStatus,T0.CardCode,T0.CardName,T0.Address,T0.Address2,T0.NumAtCard,T0.DiscPrcnt,T0.DiscSum,T0.DiscSumFC,T0.Ref1,T0.Ref2,T0.Comments,T0.TrnspCode,CONVERT(VARCHAR, T0.TaxDate, 112) as TaxDate,T0.ShipToCode,T0.U_AliciAdi,T0.U_AliciTelefon, (T1.StreetS + ' ' + T1.CountyS +'/' + T1.CityS) Adres,T1.StateS,T1.CityS as \"İl\",T1.CountyS as \"İlce\",T3.DocEntry as \"OcrdDocEntry\" from ORDR AS T0 INNER JOIN RDR12 T1 ON T0.[DocEntry] = T1.[DocEntry] INNER JOIN OCRD T3 ON T0.CardCode = T3.[CardCode] Where ISNULL(T0.U_AktarimDurum,'')!='2' and T0.DocEntry='" + OrderNo + "' and ISNULL(T0.U_TrackingNo,'')='' order by T0.DocEntry Desc ";
                                 oRS.DoQuery(ORDR);
 
-                                //request.cargoKey = "Y" + OrderNo.ToString();
-                                //request.invoiceKey = "Y" + OrderNo.ToString();
-                                //request.receiverAddress = oRS.Fields.Item("Adres").Value.ToString();
-                                //request.receiverCustName = oRS.Fields.Item("U_AliciAdi").Value.ToString();
-                                //request.receiverPhone1 = oRS.Fields.Item("U_AliciTelefon").Value.ToString();
-                                //request.cityName = oRS.Fields.Item("İl").Value.ToString();
-                                //request.townName = oRS.Fields.Item("İlce").Value.ToString();
+                                request.order.referenceId = "Y" + OrderNo.ToString();//"SIPARIS34567"; 
+                                //request.order.barcode = "SIPARIS34567";
+                                //request.order.billOfLandingId = "İrsaliye 1";
+                                //request.order.isCOD = 0;
+                                //request.order.codAmount = 0;
+                                request.order.shipmentServiceType = 1;//zorunlu
+                                request.order.packagingType = 1;//zorunlu
+                                request.order.content = oRS.Fields.Item("U_AliciAdi").Value.ToString() + " Siparişi";//zorunlu
+                                //request.order.smsPreference1 = 1;
+                                //request.order.smsPreference2 = 0;
+                                //request.order.smsPreference3 = 0;
+                                request.order.paymentType = 1;//zorunlu
+                                request.order.deliveryType = 1;//zorunlu
+                                request.order.description = oRS.Fields.Item("Comments").Value.ToString();//zorunlu
+                                request.order.marketPlaceShortCode = "";//zorunlu
+                                 //request.order.marketPlaceSaleCode = "";
+                                 //request.order.pudoId = "";
 
-                                request.order.referenceId = "SIPARIS34567";
-                                request.order.barcode = "SIPARIS34567";
-                                request.order.billOfLandingId = "İrsaliye 1";
-                                request.order.isCOD = 0;
-                                request.order.codAmount = 0;
-                                request.order.shipmentServiceType = 1;
-                                request.order.packagingType = 1;
-                                request.order.content = "İçerik 1";
-                                request.order.smsPreference1 = 1;
-                                request.order.smsPreference2 = 0;
-                                request.order.smsPreference3 = 0;
-                                request.order.paymentType = 1;
-                                request.order.deliveryType = 1;
-                                request.order.description = "Açıklama 1";
-                                request.order.marketPlaceShortCode = "";
-                                request.order.marketPlaceSaleCode = "";
-                                request.order.pudoId = "";
-                                 
-                                orderPieceList.Add(new AIFCargoService.OrderPieceList
+                                SAPbobsCOM.Recordset oRS1 = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
+                                string RDR1 = "select \"T0.CodeBars\",\"T0.ItemName\" from RDR1 T0 Where T0.DocEntry = '" + OrderNo + "'";
+                                oRS1.DoQuery(RDR1);
+
+                                if (oRS1.RecordCount > 0)
                                 {
-                                    barcode = "SIPARIS34567_PARCA1",
-                                    desi = 2,
-                                    kg = 1,
-                                    content = "Parça açıklama 1",
-                                });
+                                    while (!oRS1.EoF)
+                                    {
+                                        orderPieceList.Add(new AIFCargoService.OrderPieceList
+                                        {
+                                            barcode = oRS1.Fields.Item("CodeBars").Value.ToString(),//zorunlu 
+                                            //desi = 2,
+                                            //kg = 1,
+                                            content = oRS1.Fields.Item("ItemName").Value.ToString(),//zorunlu 
+                                        });
+                                    }
+
+                                    oRS1.MoveNext();
+                                }
                                 request.orderPieceList = orderPieceList.ToArray();
 
-                                request.recipient.customerId = 58513278;
-                                request.recipient.refCustomerId= "";
-                                request.recipient.cityCode=0;
-                                request.recipient.cityName="";
-                                request.recipient.districtName = "";
-                                request.recipient.districtCode = 0;
-                                request.recipient.address = "";
-                                request.recipient.bussinessPhoneNumber = "";
-                                request.recipient.email = "";
-                                request.recipient.taxOffice = "";
-                                request.recipient.taxNumber = "";
-                                request.recipient.fullName = "";
-                                request.recipient.homePhoneNumber = "";
-                                request.recipient.mobilePhoneNumber = "";
+                                request.recipient.customerId = Convert.ToInt32(oRS.Fields.Item("DocEntry").Value);//ordr //zorunlu 
+                                //request.recipient.refCustomerId= "";
+                                request.recipient.cityCode = Convert.ToInt32(oRS.Fields.Item("StateS").Value); //zorunlu değil
+                                request.recipient.cityName = oRS.Fields.Item("İl").Value.ToString(); //zorunlu değil
+                                request.recipient.districtName = oRS.Fields.Item("İlce").Value.ToString(); //zorunlu değil
+                                //request.recipient.districtCode = 0;
+                                request.recipient.address = oRS.Fields.Item("Adres").Value.ToString(); //zorunlu değil
+                                //request.recipient.bussinessPhoneNumber = "";
+                                //request.recipient.email = "";
+                                //request.recipient.taxOffice = "";
+                                //request.recipient.taxNumber = "";
+                                request.recipient.fullName = oRS.Fields.Item("U_AliciAdi").Value.ToString();//zorunlu değil
+                                //request.recipient.homePhoneNumber = "";
+                                request.recipient.mobilePhoneNumber = oRS.Fields.Item("U_AliciTelefon").Value.ToString();//zorunlu değil
 
                                 requestlist.Add(request);
 
                                 var resp2 = AIFWS.CreateOrderToMNG(login, requestlist.ToArray());
-                                if (resp2[0] == null)
+                                if (resp2[0].errors == null)
                                 {
                                     for (int i = 0; i < oDocs.Lines.Count; i++)
                                     {
@@ -412,7 +418,12 @@ namespace ZwillingCevaWebService.SAPLayer
                                     oDocs.UserFields.Fields.Item("U_AktarimDurum").Value = "1";
                                     var r = oDocs.Update();
 
-                                    setLog("4", "E", tempOrderNo + " numaralı sipariş kargoya gönderilirken hata aldı." + resp2[0].errors.ToString(), "", tempOrderNo, "", "", oCompany);
+                                    //setLog("4", "E", tempOrderNo + " numaralı sipariş kargoya gönderilirken hata aldı." + resp2[0].errors.ToString(), "", tempOrderNo, "", "", oCompany);
+
+                                    foreach (var item in resp2[0].errors)
+                                    {
+                                        setLog("4", "E", tempOrderNo + " numaralı sipariş kargoya gönderilirken hata aldı." + "Code:" + item.code + "Desc:" + item.description + "Msg:" + item.message, "", tempOrderNo, "", "", oCompany);
+                                    }
                                 }
                                 #endregion
 

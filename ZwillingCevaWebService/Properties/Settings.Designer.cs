@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ServiceTest.Properties {
+namespace ZwillingCevaWebService.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -20,16 +20,6 @@ namespace ServiceTest.Properties {
         public static Settings Default {
             get {
                 return defaultInstance;
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://localhost:44316/AIFCargoWebServices.asmx")]
-        public string ServiceTest_AIFCargoWebServices_AIFCargoWebServices {
-            get {
-                return ((string)(this["ServiceTest_AIFCargoWebServices_AIFCargoWebServices"]));
             }
         }
     }
