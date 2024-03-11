@@ -316,9 +316,14 @@ namespace ZwillingCevaWebService.SAPLayer
 
                                 AIFCargoService.MNGTokenRequest login = new AIFCargoService.MNGTokenRequest();
                                 #region MNG TEST ORTAM
+                                //login.customerNumber = "251871723";
+                                //login.password = "251871723..!!";
+                                //login.identityType = "1";
+                                #endregion
+                                #region MNG CANLI ORTAM
                                 login.customerNumber = "251871723";
-                                login.password = "251871723..!!";
-                                login.identityType = "1"; 
+                                login.password = "Murat123.";
+                                login.identityType = "1";
                                 #endregion
                                 SAPbobsCOM.Recordset oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
 
