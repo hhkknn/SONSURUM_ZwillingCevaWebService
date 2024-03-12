@@ -313,6 +313,7 @@ namespace ZwillingCevaWebService.SAPLayer
                                 AIFCargoService.MNGCreateOrderRequest request = new AIFCargoService.MNGCreateOrderRequest();
                                 List<AIFCargoService.MNGCreateOrderRequest> requestlist = new List<AIFCargoService.MNGCreateOrderRequest>();
                                 List<AIFCargoService.OrderPieceList> orderPieceList = new List<AIFCargoService.OrderPieceList>();
+                                AIFCargoService.OrderPieceList  orderPiece = new AIFCargoService.OrderPieceList();
 
                                 AIFCargoService.MNGTokenRequest login = new AIFCargoService.MNGTokenRequest();
                                 #region MNG TEST ORTAM
@@ -329,6 +330,7 @@ namespace ZwillingCevaWebService.SAPLayer
 
                                 string ORDR = "select  T0.DocEntry,T0.DocNum,T0.DocType,CONVERT(VARCHAR, T0.DocDate, 112) as DocDate,CONVERT(VARCHAR, T0.DocDueDate, 112) as DocDueDate,T0.DocCur,T0.DocRate,T0.DocStatus,T0.CardCode,T0.CardName,T0.Address,T0.Address2,T0.NumAtCard,T0.DiscPrcnt,T0.DiscSum,T0.DiscSumFC,T0.Ref1,T0.Ref2,T0.Comments,T0.TrnspCode,CONVERT(VARCHAR, T0.TaxDate, 112) as TaxDate,T0.ShipToCode,T0.U_AliciAdi,T0.U_AliciTelefon, (T1.StreetS + ' ' + T1.CountyS +'/' + T1.CityS) Adres,T1.StateS,T1.CityS as \"İl\",T1.CountyS as \"İlce\",T3.DocEntry as \"OcrdDocEntry\" from ORDR AS T0 INNER JOIN RDR12 T1 ON T0.[DocEntry] = T1.[DocEntry] INNER JOIN OCRD T3 ON T0.CardCode = T3.[CardCode] Where ISNULL(T0.U_AktarimDurum,'')!='2' and T0.DocEntry='" + OrderNo + "' and ISNULL(T0.U_TrackingNo,'')='' order by T0.DocEntry Desc ";
                                 oRS.DoQuery(ORDR);
+                                request.order = new AIFCargoService.Order();
 
                                 request.order.referenceId = "Y" + OrderNo.ToString();//"SIPARIS34567"; 
                                 //request.order.barcode = "SIPARIS34567";
@@ -353,23 +355,34 @@ namespace ZwillingCevaWebService.SAPLayer
                                 string RDR1 = "select \"T0.CodeBars\",\"T0.ItemName\" from RDR1 T0 Where T0.DocEntry = '" + OrderNo + "'";
 
                                 oRS1.DoQuery(RDR1);
-
+                                orderPieceList = new List<AIFCargoService.OrderPieceList>();
                                 if (oRS1.RecordCount > 0)
                                 {
                                     while (!oRS1.EoF)
                                     {
-                                        orderPieceList.Add(new AIFCargoService.OrderPieceList
-                                        {
-                                            barcode = oRS1.Fields.Item("CodeBars").Value.ToString(),//zorunlu 
-                                            //desi = 2,
-                                            //kg = 1,
-                                            content = oRS1.Fields.Item("ItemName").Value.ToString(),//zorunlu 
-                                        });
+                                        //orderPieceList.Add(new AIFCargoService.OrderPieceList
+                                        //{
+                                        //    barcode = oRS1.Fields.Item("CodeBars").Value.ToString(),//zorunlu 
+                                        //    //desi = 2,
+                                        //    //kg = 1,
+                                        //    content = oRS1.Fields.Item("Dscription").Value.ToString(),//zorunlu 
+                                        //});
+
+                                        orderPiece.barcode = oRS1.Fields.Item("CodeBars").Value.ToString();//zorunlu 
+                                                                                                           //desi = 2,
+                                                                                                           //kg = 1,
+
+                                        orderPiece.content = oRS1.Fields.Item("Dscription").Value.ToString();//zorunlu 
+
+                                        orderPieceList.Add(orderPiece);
+
+                                        oRS1.MoveNext();
                                     }
 
-                                    oRS1.MoveNext();
                                 }
                                 request.orderPieceList = orderPieceList.ToArray();
+
+                                request.recipient = new AIFCargoService.Recipient();
 
                                 request.recipient.customerId = Convert.ToInt32(oRS.Fields.Item("DocEntry").Value);//ordr //zorunlu 
                                 //request.recipient.refCustomerId= "";
