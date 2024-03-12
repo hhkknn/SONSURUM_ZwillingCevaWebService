@@ -349,7 +349,9 @@ namespace ZwillingCevaWebService.SAPLayer
                                  //request.order.pudoId = "";
 
                                 SAPbobsCOM.Recordset oRS1 = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
+                                //string RDR1 = "select \"T0.CodeBars\",\"T0.ItemName\" from RDR1 T0 Where T0.DocEntry = '" + OrderNo + "'";
                                 string RDR1 = "select \"T0.CodeBars\",\"T0.ItemName\" from RDR1 T0 Where T0.DocEntry = '" + OrderNo + "'";
+
                                 oRS1.DoQuery(RDR1);
 
                                 if (oRS1.RecordCount > 0)
