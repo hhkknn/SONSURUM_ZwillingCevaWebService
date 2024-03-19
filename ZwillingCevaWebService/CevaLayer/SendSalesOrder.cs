@@ -87,7 +87,7 @@ namespace ZwillingCevaWebService.CevaLayer
                     }
                     else
                     {
-                        orderRequest.WarehouseCode = "02"; //Online sipariş değilse direk sevkiyat olarak whosale depodan çıkış yapılır.  
+                        //orderRequest.WarehouseCode = "02"; //Online sipariş değilse direk sevkiyat olarak whosale depodan çıkış yapılır.  
                     }
 
                     orderRequest.OrderNumber = "Y" + orderRequest.MovementCode.ToString() + "-" + oDocuments.DocEntry.ToString();
@@ -349,7 +349,7 @@ namespace ZwillingCevaWebService.CevaLayer
                     }
                     else
                     { 
-                        orderRequest.WarehouseCode = "02";//Online sipariş değilse direk sevkiyat olarak whosale depodan çıkış yapılır.  
+                        //orderRequest.WarehouseCode = "02";//Online sipariş değilse direk sevkiyat olarak whosale depodan çıkış yapılır.  
                     }
 
                     orderRequest.RecordType = CevaWMSQa.RecordType.New;

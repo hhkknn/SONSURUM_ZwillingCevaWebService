@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ReferenceGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="6cac3603-b437-4168-8252-99c808641fc7" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="6cac3603-b437-4168-8252-99c808641fc7" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
   <ClientOptions>
     <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
     <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
@@ -19,11 +19,11 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="https://localhost:44316/AIFCargoWebServices.asmx" Protocol="http" SourceId="1" />
+    <MetadataSource Address="http://10.24.100.6:91/AIFCargoWebServices.asmx" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="AIFCargoWebServices.disco" MetadataType="Disco" ID="b5e989ba-9847-4f09-8aa0-be96bf3dcbec" SourceId="1" SourceUrl="https://localhost:44316/AIFCargoWebServices.asmx?disco" />
-    <MetadataFile FileName="AIFCargoWebServices.wsdl" MetadataType="Wsdl" ID="394d0948-0b0d-401b-a6cf-8883581af182" SourceId="1" SourceUrl="https://localhost:44316/AIFCargoWebServices.asmx?wsdl" />
+    <MetadataFile FileName="AIFCargoWebServices1.wsdl" MetadataType="Wsdl" ID="2dfd1ba6-9193-4861-bf9c-67c5e5e69e31" SourceId="1" SourceUrl="http://10.24.100.6:91/AIFCargoWebServices.asmx?wsdl" />
+    <MetadataFile FileName="AIFCargoWebServices1.disco" MetadataType="Disco" ID="1a8116b1-22d6-4982-844c-ae960f0cca20" SourceId="1" SourceUrl="http://10.24.100.6:91/AIFCargoWebServices.asmx?disco" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

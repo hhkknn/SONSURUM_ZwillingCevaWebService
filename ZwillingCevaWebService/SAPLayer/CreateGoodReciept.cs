@@ -531,6 +531,30 @@ namespace ZwillingCevaWebService.SAPLayer
                 oReturn.Lines.Quantity = Convert.ToDouble(item.Qty);
                 oReturn.Lines.WarehouseCode = WhsCode;
 
+
+                try
+                {
+                    oRS.DoQuery("Select \"VatGourpSa\" from \"OITM\" where \"ItemCode\" = '" + item.ProductNumber + "'");
+
+                    var satiskdvturu = oRS.Fields.Item("VatGourpSa").Value.ToString();
+
+                    if (satiskdvturu != "")
+                    {
+                        oRS.DoQuery("Select \"VatCrctn\" from \"OVTG\" where \"Code\" = '" + satiskdvturu + "'");
+
+                        var duzeltmekdvkodu = oRS.Fields.Item("VatCrctn").Value.ToString();
+
+                        if (duzeltmekdvkodu != "")
+                        {
+                            oReturn.Lines.VatGroup = duzeltmekdvkodu;
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+                }
+
+
                 oRS.DoQuery("Select \"Price\" from \"ITM1\" where \"ItemCode\" = '" + item.ProductNumber + "' and \"PriceList\" = '16'");
 
                 if (Convert.ToDouble(oRS.Fields.Item(0).Value) > 0)

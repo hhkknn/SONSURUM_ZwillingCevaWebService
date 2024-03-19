@@ -1,0 +1,5 @@
+3/13/2024 9:46:46 AM----MNG KARGO SERVİSİ EX HATA ----ORDER NO:35348----TEMP ORDER NO: numaralı sipariş kargoya gönderilirken hata aldı.Object reference not set to an instance of an object.
+3/13/2024 12:30:16 PM----MNG KARGO SERVİSİ BAŞARISIZ----ORDER NO:35348----TEMP ORDER NO: numaralı sipariş kargoya gönderilirken hata aldı.Code:26060Desc:Recipient. CustomerId' dolu olduğunda, 'Recipient. Full Name' boş olmalıdır.Msg:Bad Request
+3/13/2024 1:22:15 PM----MNG KARGO SERVİSİ BAŞARISIZ----ORDER NO:35348----TEMP ORDER NO: numaralı sipariş kargoya gönderilirken hata aldı.Code:20001Desc:BU SİPARİS NUMARASINA AİT KAYIT ZATEN VAR!Msg:Error
+3/13/2024 3:23:56 PM----MNG KARGO SERVİSİ BAŞARISIZ----ORDER NO:35369----TEMP ORDER NO:TR-ON-000161623 numaralı sipariş kargoya gönderilirken hata aldı.Code:4002Desc:The Description field is required.Msg:Bad Request
+3/13/2024 3:24:00 PM----MNG KARGO SERVİSİ BAŞARISIZ----ORDER NO:35369----TEMP ORDER NO:TR-ON-000161623 numaralı sipariş kargoya gönderilirken hata aldı.Code:26026Desc:Order. Description' boş olamaz.Msg:Bad Request

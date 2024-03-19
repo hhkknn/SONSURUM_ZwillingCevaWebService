@@ -161,6 +161,273 @@ namespace ZwillingCevaWebService.SAPLayer
                             oDocuments.UserFields.Fields.Item("U_IRSALIYE").Value = GoodIssue.WaybillNumber.ToString();
                         }
 
+
+                        int OrderNo = tempBaseEntry;// Convert.ToInt32(oCompany.GetNewObjectKey());
+
+                        string tempOrderNo = "";
+                        SAPbobsCOM.Documents oDocs = (SAPbobsCOM.Documents)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oOrders);
+
+                        #region Kargo Gönderimi
+
+                        string integrationType = "";
+                        try
+                        {
+                            //OrderNo = 34460;
+                            oDocs.GetByKey(OrderNo);
+                            integrationType = oDocs.UserFields.Fields.Item("U_IntegrationCode").Value.ToString();
+                            tempOrderNo = oDocs.UserFields.Fields.Item("U_SASNO").Value.ToString();
+                            AIFCargoService.AIFCargoWebServicesSoapClient AIFWS = new AIFCargoService.AIFCargoWebServicesSoapClient();
+
+                            #region YURTİÇİ KARGO
+                            AIFCargoService.YKSendOrderRequest request = new AIFCargoService.YKSendOrderRequest();
+                            List<AIFCargoService.YKSendOrderRequest> requestlist = new List<AIFCargoService.YKSendOrderRequest>();
+
+                            AIFCargoService.YKLogin login = new AIFCargoService.YKLogin();
+                            login.userLanguage = "TR";
+                            login.wsUserName = "9060N435272833G";
+                            login.wsPassword = "va5N012zpxVU81FJ";
+                            SAPbobsCOM.Recordset oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
+
+                            string ORDR = "select  T0.DocEntry,T0.DocNum,T0.DocType,CONVERT(VARCHAR, T0.DocDate, 112) as DocDate,CONVERT(VARCHAR, T0.DocDueDate, 112) as DocDueDate,T0.DocCur,T0.DocRate,T0.DocStatus,T0.CardCode,T0.CardName,T0.Address,T0.Address2,T0.NumAtCard,T0.DiscPrcnt,T0.DiscSum,T0.DiscSumFC,T0.Ref1,T0.Ref2,T0.Comments,T0.TrnspCode,CONVERT(VARCHAR, T0.TaxDate, 112) as TaxDate,T0.ShipToCode,T0.U_AliciAdi,T0.U_AliciTelefon, (T1.StreetS + ' ' + T1.CountyS +'/' + T1.CityS) Adres,T1.CityS as \"İl\",T1.CountyS as \"İlce\" from ORDR AS T0 INNER JOIN RDR12 T1 ON T0.[DocEntry] = T1.[DocEntry] Where T0.DocEntry='" + OrderNo + "' order by T0.DocEntry Desc ";
+                            oRS.DoQuery(ORDR);
+
+                            request.cargoKey = "Y" + OrderNo.ToString();
+                            request.invoiceKey = "Y" + OrderNo.ToString();
+                            request.receiverAddress = oRS.Fields.Item("Adres").Value.ToString();
+                            request.receiverCustName = oRS.Fields.Item("U_AliciAdi").Value.ToString();
+                            request.receiverPhone1 = oRS.Fields.Item("U_AliciTelefon").Value.ToString();
+                            request.cityName = oRS.Fields.Item("İl").Value.ToString();
+                            request.townName = oRS.Fields.Item("İlce").Value.ToString();
+
+                            requestlist.Add(request);
+
+                            var resp2 = AIFWS.SendOrderToYK(login, requestlist.ToArray());
+                            //if (resp2[0].errCode == null && resp2[0].OutResult == "Başarılı.")
+                            if (resp2[0].errCode == null)
+                            {
+                                for (int i = 0; i < oDocs.Lines.Count; i++)
+                                {
+                                    oDocs.Lines.SetCurrentLine(i);
+                                    oDocs.Lines.UserFields.Fields.Item("U_KargoNumarasi").Value = resp2[0].jobId.ToString();
+                                    oDocs.Lines.UserFields.Fields.Item("U_KargoFirmasi").Value = "Yurtiçi Kargo";
+                                }
+                                oDocs.UserFields.Fields.Item("U_AktarimDurum").Value = "2";
+                                oDocs.UserFields.Fields.Item("U_TrackingNo").Value = resp2[0].jobId.ToString();
+                                oDocs.UserFields.Fields.Item("U_CargoFirm").Value = "YK";
+                                var r = oDocs.Update();
+
+                                if (r != 0)
+                                {
+                                    setLog("4", "E", tempOrderNo + " numaralı sipariş belgesi güncellenirken hata oluştu." + oCompany.GetLastErrorDescription(), "", tempOrderNo, "", "", oCompany);
+                                }
+                                else
+                                {
+                                    //string retval = SendMailToBarCode(Convert.ToString(oDocs.DocNum), oDocs.UserFields.Fields.Item("U_AliciAdi").Value.ToString());
+
+                                    //if (string.IsNullOrEmpty(retval))
+                                    //{
+                                    //    //setLog("4", "E", tempOrderNo + " numaralı sipariş belgesi güncellenirken hata oluştu." + Program.oCompany.GetLastErrorDescription(), "", tempOrderNo, "", "");
+                                    //}
+                                    //else
+                                    //{
+                                    //    setLog("4", "E", tempOrderNo + " numaralı sipariş belgesi için mail gönderimi sırasında hata oluştu." + retval, "", tempOrderNo, "", "");
+                                    //}
+                                }
+                            }
+                            else
+                            {
+                                oDocs.UserFields.Fields.Item("U_AktarimDurum").Value = "1";
+                                var r = oDocs.Update();
+
+                                setLog("4", "E", tempOrderNo + " numaralı sipariş kargoya gönderilirken hata aldı." + resp2[0].OutResult.ToString(), "", tempOrderNo, "", "", oCompany);
+                            }
+                            //AIFCargoService.YKSendOrderRequest
+                            //AIFWS.SendOrderToYK()
+                            //YurticiWS.YurticiIntegrationSoapClient YKWs = new YurticiWS.YurticiIntegrationSoapClient();
+                            //var result = YKWs.CreateShipment(belgeNo);
+                            //if (result.errorCode != "0")
+                            //{
+                            //    setLog("4", "E", tempOrderNo + " numaralı sipariş kargoya gönderilirken hata aldı." + result.errorDesc.ToString(), "", tempOrderNo, "", "");
+                            //}
+                            #endregion
+
+                            #region MNG KARGO
+                            AIFCargoService.MNGCreateOrderRequest request_MNG = new AIFCargoService.MNGCreateOrderRequest();
+                            AIFCargoService.MNGCreateOrderRequest requestlist_MNG = new AIFCargoService.MNGCreateOrderRequest();
+                            List<AIFCargoService.OrderPieceList> orderPieceList_MNG = new List<AIFCargoService.OrderPieceList>();
+                            AIFCargoService.OrderPieceList orderPiece_MNG = new AIFCargoService.OrderPieceList();
+
+                            AIFCargoService.MNGTokenRequest login_MNG = new AIFCargoService.MNGTokenRequest();
+                            #region MNG TEST ORTAM
+                            //login.customerNumber = "251871723";
+                            //login.password = "251871723..!!";
+                            //login.identityType = "1";
+                            #endregion
+                            #region MNG CANLI ORTAM
+                            login_MNG.customerNumber = "251871723";
+                            login_MNG.password = "Murat123.";
+                            login_MNG.identityType = "1";
+                            #endregion
+                            SAPbobsCOM.Recordset oRS_MNG = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
+
+                            //string ORDR_MNG = "select  T0.DocEntry,T0.DocNum,T0.DocType,CONVERT(VARCHAR, T0.DocDate, 112) as DocDate,CONVERT(VARCHAR, T0.DocDueDate, 112) as DocDueDate,T0.DocCur,T0.DocRate,T0.DocStatus,T0.CardCode,T0.CardName,T0.Address,T0.Address2,T0.NumAtCard,T0.DiscPrcnt,T0.DiscSum,T0.DiscSumFC,T0.Ref1,T0.Ref2,T0.Comments,T0.TrnspCode,CONVERT(VARCHAR, T0.TaxDate, 112) as TaxDate,T0.ShipToCode,T0.U_AliciAdi,T0.U_AliciTelefon, (T1.StreetS + ' ' + T1.CountyS +'/' + T1.CityS) Adres,T1.StateS,T1.CityS as \"İl\",T1.CountyS as \"İlce\",T3.DocEntry as \"OcrdDocEntry\" from ORDR AS T0 INNER JOIN RDR12 T1 ON T0.[DocEntry] = T1.[DocEntry] INNER JOIN OCRD T3 ON T0.CardCode = T3.[CardCode] Where ISNULL(T0.U_AktarimDurum,'')!='2' and T0.DocEntry='" + OrderNo + "' and ISNULL(T0.U_TrackingNo,'')='' order by T0.DocEntry Desc ";
+
+
+                            string ORDR_MNG = "select  T0.DocEntry,T0.DocNum,T0.DocType,CONVERT(VARCHAR, T0.DocDate, 112) as DocDate,CONVERT(VARCHAR, T0.DocDueDate, 112) as DocDueDate,T0.DocCur,T0.DocRate,T0.DocStatus,T0.CardCode,T0.CardName,T0.Address,T0.Address2,T0.NumAtCard,T0.DiscPrcnt,T0.DiscSum,T0.DiscSumFC,T0.Ref1,T0.Ref2,T0.Comments,T0.TrnspCode,CONVERT(VARCHAR, T0.TaxDate, 112) as TaxDate,T0.ShipToCode,T0.U_AliciAdi,T0.U_AliciTelefon, (T1.StreetS + ' ' + T1.CountyS +'/' + T1.CityS) Adres,T1.StateS,T1.CityS as \"İl\",T1.CountyS as \"İlce\",T3.DocEntry as \"OcrdDocEntry\" from ORDR AS T0 INNER JOIN RDR12 T1 ON T0.[DocEntry] = T1.[DocEntry] INNER JOIN OCRD T3 ON T0.CardCode = T3.[CardCode] Where  T0.DocEntry='" + OrderNo + "' order by T0.DocEntry Desc "; // Bu sorgudaki U_TrackingNo ve U_AktarimDurum alanları YK da doldurulduğu için burada veri gelmiyordu o sebepten MNGYe gitmiyordu kaldırdım.
+
+                            oRS_MNG.DoQuery(ORDR_MNG);
+                            request_MNG.order = new AIFCargoService.Order();
+
+                            request_MNG.order.referenceId = "Y" + OrderNo.ToString();//"SIPARIS34567"; 
+                                                                                     //request.order.barcode = "SIPARIS34567";
+                                                                                     //request.order.billOfLandingId = "İrsaliye 1";
+                                                                                     //request.order.isCOD = 0;
+                                                                                     //request.order.codAmount = 0;
+                            request_MNG.order.shipmentServiceType = 1;//zorunlu
+                            request_MNG.order.packagingType = 1;//zorunlu
+                            request_MNG.order.content = oRS_MNG.Fields.Item("U_AliciAdi").Value.ToString() + " Siparişi";//zorunlu
+                                                                                                                         //request.order.smsPreference1 = 1;
+                                                                                                                         //request.order.smsPreference2 = 0;
+                                                                                                                         //request.order.smsPreference3 = 0;
+                            request_MNG.order.paymentType = 1;//zorunlu
+                            request_MNG.order.deliveryType = 1;//zorunlu
+                            request_MNG.order.description = oRS_MNG.Fields.Item("Comments").Value.ToString();//zorunlu
+                            request_MNG.order.marketPlaceShortCode = "";//zorunlu
+                                                                        //request.order.marketPlaceSaleCode = "";
+                                                                        //request.order.pudoId = "";
+
+                            SAPbobsCOM.Recordset oRS_MNG1 = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
+                            //string RDR1 = "select \"T0.CodeBars\",\"T0.ItemName\" from RDR1 T0 Where T0.DocEntry = '" + OrderNo + "'";
+                            string RDR1_MNG = "select T0.\"CodeBars\",T0.\"Dscription\" from RDR1 T0 Where T0.DocEntry = '" + OrderNo + "'";
+
+                            oRS_MNG1.DoQuery(RDR1_MNG);
+                            orderPieceList_MNG = new List<AIFCargoService.OrderPieceList>();
+                            if (oRS_MNG1.RecordCount > 0)
+                            {
+                                while (!oRS_MNG1.EoF)
+                                {
+                                    //orderPieceList.Add(new AIFCargoService.OrderPieceList
+                                    //{
+                                    //    barcode = oRS1.Fields.Item("CodeBars").Value.ToString(),//zorunlu 
+                                    //    //desi = 2,
+                                    //    //kg = 1,
+                                    //    content = oRS1.Fields.Item("Dscription").Value.ToString(),//zorunlu 
+                                    //});
+
+                                    orderPiece_MNG.barcode = oRS_MNG1.Fields.Item("CodeBars").Value.ToString();//zorunlu 
+                                                                                                               //desi = 2,
+                                                                                                               //kg = 1,
+
+                                    orderPiece_MNG.content = oRS_MNG1.Fields.Item("Dscription").Value.ToString();//zorunlu 
+
+                                    orderPieceList_MNG.Add(orderPiece_MNG);
+
+                                    oRS_MNG1.MoveNext();
+                                }
+
+                            }
+                            request_MNG.orderPieceList = orderPieceList_MNG.ToArray();
+
+                            request_MNG.recipient = new AIFCargoService.Recipient();
+
+                            request_MNG.recipient.customerId = "";//Convert.ToInt32(oRS_MNG.Fields.Item("DocEntry").Value);//ordr //zorunlu 
+                                                                  //request.recipient.refCustomerId= "";
+                                                                  //request_MNG.recipient.cityCode = Convert.ToInt32(oRS_MNG.Fields.Item("StateS").Value); //zorunlu değil
+                            request_MNG.recipient.cityName = oRS_MNG.Fields.Item("İl").Value.ToString(); //zorunlu değil
+                            request_MNG.recipient.districtName = oRS_MNG.Fields.Item("İlce").Value.ToString(); //zorunlu değil
+                                                                                                               //request.recipient.districtCode = 0;
+                            request_MNG.recipient.address = oRS_MNG.Fields.Item("Adres").Value.ToString(); //zorunlu değil
+                                                                                                           //request.recipient.bussinessPhoneNumber = "";
+                                                                                                           //request.recipient.email = "";
+                                                                                                           //request.recipient.taxOffice = "";
+                                                                                                           //request.recipient.taxNumber = "";
+                            request_MNG.recipient.fullName = oRS_MNG.Fields.Item("U_AliciAdi").Value.ToString();//zorunlu değil
+                                                                                                                //request.recipient.homePhoneNumber = "";
+                            request_MNG.recipient.mobilePhoneNumber = oRS_MNG.Fields.Item("U_AliciTelefon").Value.ToString() == "" ? "0" : oRS_MNG.Fields.Item("U_AliciTelefon").Value.ToString();//zorunlu değil
+
+
+                            //requestlist_MNG.Add(request_MNG);
+
+                            var resp2_MNG = AIFWS.CreateOrderToMNG(login_MNG, request_MNG);
+                            if (resp2_MNG[0].error == null && resp2_MNG[0].errors == null)
+                            {
+                                for (int i = 0; i < oDocs.Lines.Count; i++)
+                                {
+                                    oDocs.Lines.SetCurrentLine(i);
+                                    oDocs.Lines.UserFields.Fields.Item("U_MNGKargoNo").Value = resp2_MNG[0].orderInvoiceDetailId.ToString();
+                                    //oDocs.Lines.UserFields.Fields.Item("U_KargoFirmasi").Value = "MNG Kargo";
+                                }
+                                 oDocs.UserFields.Fields.Item("U_MNGAktarim").Value = "2";
+                                oDocs.UserFields.Fields.Item("U_MNGTrackNo").Value = resp2_MNG[0].orderInvoiceId.ToString();
+                                //oDocs.UserFields.Fields.Item("U_CargoFirm").Value = "MNG";
+                                var r = oDocs.Update();
+
+                                if (r != 0)
+                                {
+                                    setLog("4", "E", tempOrderNo + " numaralı sipariş belgesi güncellenirken hata oluştu." + oCompany.GetLastErrorDescription(), "", tempOrderNo, "", "", oCompany);
+
+                                    WriteToFile(DateTime.Now + "----" + "MNG KARGO SERVİSİ BAŞARILI" + "----" + "ORDER NO:" + OrderNo);
+
+                                }
+                                else
+                                {
+                                    //string retval = SendMailToBarCode(Convert.ToString(oDocs.DocNum), oDocs.UserFields.Fields.Item("U_AliciAdi").Value.ToString());
+
+                                    //if (string.IsNullOrEmpty(retval))
+                                    //{
+                                    //    //setLog("4", "E", tempOrderNo + " numaralı sipariş belgesi güncellenirken hata oluştu." + Program.oCompany.GetLastErrorDescription(), "", tempOrderNo, "", "");
+                                    //}
+                                    //else
+                                    //{
+                                    //    setLog("4", "E", tempOrderNo + " numaralı sipariş belgesi için mail gönderimi sırasında hata oluştu." + retval, "", tempOrderNo, "", "");
+                                    //}
+                                }
+                            }
+                            else
+                            {
+                                oDocs.UserFields.Fields.Item("U_MNGAktarim").Value = "1"; 
+                                var r = oDocs.Update();
+
+                                //setLog("4", "E", tempOrderNo + " numaralı sipariş kargoya gönderilirken hata aldı." + resp2[0].errors.ToString(), "", tempOrderNo, "", "", oCompany);
+
+                                if (resp2_MNG[0].error != null)
+                                {
+                                    setLog("4", "E", tempOrderNo + " numaralı sipariş kargoya gönderilirken hata aldı." + "Code:" + resp2_MNG[0].error.code + "Desc:" + resp2_MNG[0].error.description + "Msg:" + resp2_MNG[0].error.message, "", tempOrderNo, "", "", oCompany);
+
+                                    WriteToFile(DateTime.Now + "----" + "MNG KARGO SERVİSİ BAŞARISIZ" + "----" + "ORDER NO:" + OrderNo + "----" + "TEMP ORDER NO:" + tempOrderNo + " numaralı sipariş kargoya gönderilirken hata aldı." + "Code:" + resp2_MNG[0].error.code + "Desc:" + resp2_MNG[0].error.description + "Msg:" + resp2_MNG[0].error.message);
+                                }
+                                else if (resp2_MNG[0].errors != null)
+                                {
+
+                                    foreach (var item in resp2_MNG[0].errors)
+                                    {
+                                        setLog("4", "E", tempOrderNo + " numaralı sipariş kargoya gönderilirken hata aldı." + "Code:" + item.code + "Desc:" + item.description + "Msg:" + item.message, "", tempOrderNo, "", "", oCompany);
+
+                                        WriteToFile(DateTime.Now + "----" + "MNG KARGO SERVİSİ BAŞARISIZ" + "----" + "ORDER NO:" + OrderNo + "----" + "TEMP ORDER NO:" + tempOrderNo + " numaralı sipariş kargoya gönderilirken hata aldı." + "Code:" + item.code + "Desc:" + item.description + "Msg:" + item.message);
+                                    }
+                                }
+                            }
+                            #endregion
+
+
+                        }
+                        catch (Exception ex)
+                        {
+                            try
+                            {
+                                oDocs.UserFields.Fields.Item("U_AktarimDurum").Value = "1";
+                                var r = oDocs.Update();
+                                setLog("4", "E", tempOrderNo + " numaralı sipariş kargoya gönderilirken hata aldı." + ex.Message.ToString(), "", tempOrderNo, "", "", oCompany);
+
+                                WriteToFile(DateTime.Now + "----" + "MNG KARGO SERVİSİ EX HATA " + "----" + "ORDER NO:" + OrderNo + "----" + "TEMP ORDER NO:" + tempOrderNo + " numaralı sipariş kargoya gönderilirken hata aldı." + ex.Message.ToString());
+                            }
+                            catch (Exception)
+                            {
+                            }
+                        }
+
+                        #endregion Kargo Gönderimi
+
                         int retval = oDocuments.Add();
 
                         var GoodIssueXML = XmlUtils.SerializeToXml(GoodIssue);
@@ -222,241 +489,6 @@ namespace ZwillingCevaWebService.SAPLayer
 
                             oGeneralService.Add(oGeneralData);
 
-                            int OrderNo = Convert.ToInt32(oCompany.GetNewObjectKey());
-
-                            string tempOrderNo = "";
-                            SAPbobsCOM.Documents oDocs = (SAPbobsCOM.Documents)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oOrders);
-
-                            #region Kargo Gönderimi
-
-                            string integrationType = "";
-                            try
-                            {
-                                oDocs.GetByKey(OrderNo);
-                                integrationType = oDocs.UserFields.Fields.Item("U_IntegrationCode").Value.ToString();
-                                tempOrderNo = oDocs.UserFields.Fields.Item("U_SASNO").Value.ToString();
-                                AIFCargoService.AIFCargoWebServicesSoapClient AIFWS = new AIFCargoService.AIFCargoWebServicesSoapClient();
-                                #region YURTİÇİ KARGO
-                                //AIFCargoService.YKSendOrderRequest request = new AIFCargoService.YKSendOrderRequest();
-                                //List<AIFCargoService.YKSendOrderRequest> requestlist = new List<AIFCargoService.YKSendOrderRequest>();
-
-                                //AIFCargoService.YKLogin login = new AIFCargoService.YKLogin();
-                                //login.userLanguage = "TR";
-                                //login.wsUserName = "9060N435272833G";
-                                //login.wsPassword = "va5N012zpxVU81FJ";
-                                //SAPbobsCOM.Recordset oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
-
-                                //string ORDR = "select  T0.DocEntry,T0.DocNum,T0.DocType,CONVERT(VARCHAR, T0.DocDate, 112) as DocDate,CONVERT(VARCHAR, T0.DocDueDate, 112) as DocDueDate,T0.DocCur,T0.DocRate,T0.DocStatus,T0.CardCode,T0.CardName,T0.Address,T0.Address2,T0.NumAtCard,T0.DiscPrcnt,T0.DiscSum,T0.DiscSumFC,T0.Ref1,T0.Ref2,T0.Comments,T0.TrnspCode,CONVERT(VARCHAR, T0.TaxDate, 112) as TaxDate,T0.ShipToCode,T0.U_AliciAdi,T0.U_AliciTelefon, (T1.StreetS + ' ' + T1.CountyS +'/' + T1.CityS) Adres,T1.CityS as \"İl\",T1.CountyS as \"İlce\" from ORDR AS T0 INNER JOIN RDR12 T1 ON T0.[DocEntry] = T1.[DocEntry] Where ISNULL(T0.U_AktarimDurum,'')!='2' and T0.DocEntry='" + OrderNo + "' and ISNULL(T0.U_TrackingNo,'')='' order by T0.DocEntry Desc ";
-                                //oRS.DoQuery(ORDR);
-
-                                //request.cargoKey = "Y" + OrderNo.ToString();
-                                //request.invoiceKey = "Y" + OrderNo.ToString();
-                                //request.receiverAddress = oRS.Fields.Item("Adres").Value.ToString();
-                                //request.receiverCustName = oRS.Fields.Item("U_AliciAdi").Value.ToString();
-                                //request.receiverPhone1 = oRS.Fields.Item("U_AliciTelefon").Value.ToString();
-                                //request.cityName = oRS.Fields.Item("İl").Value.ToString();
-                                //request.townName = oRS.Fields.Item("İlce").Value.ToString();
-
-                                //requestlist.Add(request);
-
-                                //var resp2 = AIFWS.SendOrderToYK(login, requestlist.ToArray());
-                                ////if (resp2[0].errCode == null && resp2[0].OutResult == "Başarılı.")
-                                //if (resp2[0].errCode == null)
-                                //{
-                                //    for (int i = 0; i < oDocs.Lines.Count; i++)
-                                //    {
-                                //        oDocs.Lines.SetCurrentLine(i);
-                                //        oDocs.Lines.UserFields.Fields.Item("U_KargoNumarasi").Value = resp2[0].jobId.ToString();
-                                //        oDocs.Lines.UserFields.Fields.Item("U_KargoFirmasi").Value = "Yurtiçi Kargo";
-                                //    }
-                                //    oDocs.UserFields.Fields.Item("U_AktarimDurum").Value = "2";
-                                //    oDocs.UserFields.Fields.Item("U_TrackingNo").Value = resp2[0].jobId.ToString();
-                                //    oDocs.UserFields.Fields.Item("U_CargoFirm").Value = "YK";
-                                //    var r = oDocs.Update();
-
-                                //    if (r != 0)
-                                //    {
-                                //        setLog("4", "E", tempOrderNo + " numaralı sipariş belgesi güncellenirken hata oluştu." + oCompany.GetLastErrorDescription(), "", tempOrderNo, "", "", oCompany);
-                                //    }
-                                //    else
-                                //    {
-                                //        //string retval = SendMailToBarCode(Convert.ToString(oDocs.DocNum), oDocs.UserFields.Fields.Item("U_AliciAdi").Value.ToString());
-
-                                //        //if (string.IsNullOrEmpty(retval))
-                                //        //{
-                                //        //    //setLog("4", "E", tempOrderNo + " numaralı sipariş belgesi güncellenirken hata oluştu." + Program.oCompany.GetLastErrorDescription(), "", tempOrderNo, "", "");
-                                //        //}
-                                //        //else
-                                //        //{
-                                //        //    setLog("4", "E", tempOrderNo + " numaralı sipariş belgesi için mail gönderimi sırasında hata oluştu." + retval, "", tempOrderNo, "", "");
-                                //        //}
-                                //    }
-                                //}
-                                //else
-                                //{
-                                //    oDocs.UserFields.Fields.Item("U_AktarimDurum").Value = "1";
-                                //    var r = oDocs.Update();
-
-                                //    setLog("4", "E", tempOrderNo + " numaralı sipariş kargoya gönderilirken hata aldı." + resp2[0].OutResult.ToString(), "", tempOrderNo, "", "", oCompany);
-                                //}
-                                ////AIFCargoService.YKSendOrderRequest
-                                ////AIFWS.SendOrderToYK()
-                                ////YurticiWS.YurticiIntegrationSoapClient YKWs = new YurticiWS.YurticiIntegrationSoapClient();
-                                ////var result = YKWs.CreateShipment(belgeNo);
-                                ////if (result.errorCode != "0")
-                                ////{
-                                ////    setLog("4", "E", tempOrderNo + " numaralı sipariş kargoya gönderilirken hata aldı." + result.errorDesc.ToString(), "", tempOrderNo, "", "");
-                                ////}
-                                #endregion
-
-                                #region MNG KARGO
-                                AIFCargoService.MNGCreateOrderRequest request = new AIFCargoService.MNGCreateOrderRequest();
-                                List<AIFCargoService.MNGCreateOrderRequest> requestlist = new List<AIFCargoService.MNGCreateOrderRequest>();
-                                List<AIFCargoService.OrderPieceList> orderPieceList = new List<AIFCargoService.OrderPieceList>();
-                                AIFCargoService.OrderPieceList  orderPiece = new AIFCargoService.OrderPieceList();
-
-                                AIFCargoService.MNGTokenRequest login = new AIFCargoService.MNGTokenRequest();
-                                #region MNG TEST ORTAM
-                                //login.customerNumber = "251871723";
-                                //login.password = "251871723..!!";
-                                //login.identityType = "1";
-                                #endregion
-                                #region MNG CANLI ORTAM
-                                login.customerNumber = "251871723";
-                                login.password = "Murat123.";
-                                login.identityType = "1";
-                                #endregion
-                                SAPbobsCOM.Recordset oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
-
-                                string ORDR = "select  T0.DocEntry,T0.DocNum,T0.DocType,CONVERT(VARCHAR, T0.DocDate, 112) as DocDate,CONVERT(VARCHAR, T0.DocDueDate, 112) as DocDueDate,T0.DocCur,T0.DocRate,T0.DocStatus,T0.CardCode,T0.CardName,T0.Address,T0.Address2,T0.NumAtCard,T0.DiscPrcnt,T0.DiscSum,T0.DiscSumFC,T0.Ref1,T0.Ref2,T0.Comments,T0.TrnspCode,CONVERT(VARCHAR, T0.TaxDate, 112) as TaxDate,T0.ShipToCode,T0.U_AliciAdi,T0.U_AliciTelefon, (T1.StreetS + ' ' + T1.CountyS +'/' + T1.CityS) Adres,T1.StateS,T1.CityS as \"İl\",T1.CountyS as \"İlce\",T3.DocEntry as \"OcrdDocEntry\" from ORDR AS T0 INNER JOIN RDR12 T1 ON T0.[DocEntry] = T1.[DocEntry] INNER JOIN OCRD T3 ON T0.CardCode = T3.[CardCode] Where ISNULL(T0.U_AktarimDurum,'')!='2' and T0.DocEntry='" + OrderNo + "' and ISNULL(T0.U_TrackingNo,'')='' order by T0.DocEntry Desc ";
-                                oRS.DoQuery(ORDR);
-                                request.order = new AIFCargoService.Order();
-
-                                request.order.referenceId = "Y" + OrderNo.ToString();//"SIPARIS34567"; 
-                                //request.order.barcode = "SIPARIS34567";
-                                //request.order.billOfLandingId = "İrsaliye 1";
-                                //request.order.isCOD = 0;
-                                //request.order.codAmount = 0;
-                                request.order.shipmentServiceType = 1;//zorunlu
-                                request.order.packagingType = 1;//zorunlu
-                                request.order.content = oRS.Fields.Item("U_AliciAdi").Value.ToString() + " Siparişi";//zorunlu
-                                //request.order.smsPreference1 = 1;
-                                //request.order.smsPreference2 = 0;
-                                //request.order.smsPreference3 = 0;
-                                request.order.paymentType = 1;//zorunlu
-                                request.order.deliveryType = 1;//zorunlu
-                                request.order.description = oRS.Fields.Item("Comments").Value.ToString();//zorunlu
-                                request.order.marketPlaceShortCode = "";//zorunlu
-                                 //request.order.marketPlaceSaleCode = "";
-                                 //request.order.pudoId = "";
-
-                                SAPbobsCOM.Recordset oRS1 = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
-                                //string RDR1 = "select \"T0.CodeBars\",\"T0.ItemName\" from RDR1 T0 Where T0.DocEntry = '" + OrderNo + "'";
-                                string RDR1 = "select \"T0.CodeBars\",\"T0.ItemName\" from RDR1 T0 Where T0.DocEntry = '" + OrderNo + "'";
-
-                                oRS1.DoQuery(RDR1);
-                                orderPieceList = new List<AIFCargoService.OrderPieceList>();
-                                if (oRS1.RecordCount > 0)
-                                {
-                                    while (!oRS1.EoF)
-                                    {
-                                        //orderPieceList.Add(new AIFCargoService.OrderPieceList
-                                        //{
-                                        //    barcode = oRS1.Fields.Item("CodeBars").Value.ToString(),//zorunlu 
-                                        //    //desi = 2,
-                                        //    //kg = 1,
-                                        //    content = oRS1.Fields.Item("Dscription").Value.ToString(),//zorunlu 
-                                        //});
-
-                                        orderPiece.barcode = oRS1.Fields.Item("CodeBars").Value.ToString();//zorunlu 
-                                                                                                           //desi = 2,
-                                                                                                           //kg = 1,
-
-                                        orderPiece.content = oRS1.Fields.Item("Dscription").Value.ToString();//zorunlu 
-
-                                        orderPieceList.Add(orderPiece);
-
-                                        oRS1.MoveNext();
-                                    }
-
-                                }
-                                request.orderPieceList = orderPieceList.ToArray();
-
-                                request.recipient = new AIFCargoService.Recipient();
-
-                                request.recipient.customerId = Convert.ToInt32(oRS.Fields.Item("DocEntry").Value);//ordr //zorunlu 
-                                //request.recipient.refCustomerId= "";
-                                request.recipient.cityCode = Convert.ToInt32(oRS.Fields.Item("StateS").Value); //zorunlu değil
-                                request.recipient.cityName = oRS.Fields.Item("İl").Value.ToString(); //zorunlu değil
-                                request.recipient.districtName = oRS.Fields.Item("İlce").Value.ToString(); //zorunlu değil
-                                //request.recipient.districtCode = 0;
-                                request.recipient.address = oRS.Fields.Item("Adres").Value.ToString(); //zorunlu değil
-                                //request.recipient.bussinessPhoneNumber = "";
-                                //request.recipient.email = "";
-                                //request.recipient.taxOffice = "";
-                                //request.recipient.taxNumber = "";
-                                request.recipient.fullName = oRS.Fields.Item("U_AliciAdi").Value.ToString();//zorunlu değil
-                                //request.recipient.homePhoneNumber = "";
-                                request.recipient.mobilePhoneNumber = oRS.Fields.Item("U_AliciTelefon").Value.ToString();//zorunlu değil
-
-                                requestlist.Add(request);
-
-                                var resp2 = AIFWS.CreateOrderToMNG(login, requestlist.ToArray());
-                                if (resp2[0].errors == null)
-                                {
-                                    for (int i = 0; i < oDocs.Lines.Count; i++)
-                                    {
-                                        oDocs.Lines.SetCurrentLine(i);
-                                        oDocs.Lines.UserFields.Fields.Item("U_KargoNumarasi").Value = resp2[0].orderInvoiceDetailId.ToString();
-                                        oDocs.Lines.UserFields.Fields.Item("U_KargoFirmasi").Value = "MNG Kargo";
-                                    }
-                                    oDocs.UserFields.Fields.Item("U_AktarimDurum").Value = "2";
-                                    oDocs.UserFields.Fields.Item("U_TrackingNo").Value = resp2[0].orderInvoiceId.ToString();
-                                    oDocs.UserFields.Fields.Item("U_CargoFirm").Value = "MNG";
-                                    var r = oDocs.Update();
-
-                                    if (r != 0)
-                                    {
-                                        setLog("4", "E", tempOrderNo + " numaralı sipariş belgesi güncellenirken hata oluştu." + oCompany.GetLastErrorDescription(), "", tempOrderNo, "", "", oCompany);
-                                    }
-                                    else
-                                    {
-                                        //string retval = SendMailToBarCode(Convert.ToString(oDocs.DocNum), oDocs.UserFields.Fields.Item("U_AliciAdi").Value.ToString());
-
-                                        //if (string.IsNullOrEmpty(retval))
-                                        //{
-                                        //    //setLog("4", "E", tempOrderNo + " numaralı sipariş belgesi güncellenirken hata oluştu." + Program.oCompany.GetLastErrorDescription(), "", tempOrderNo, "", "");
-                                        //}
-                                        //else
-                                        //{
-                                        //    setLog("4", "E", tempOrderNo + " numaralı sipariş belgesi için mail gönderimi sırasında hata oluştu." + retval, "", tempOrderNo, "", "");
-                                        //}
-                                    }
-                                }
-                                else
-                                {
-                                    oDocs.UserFields.Fields.Item("U_AktarimDurum").Value = "1";
-                                    var r = oDocs.Update();
-
-                                    //setLog("4", "E", tempOrderNo + " numaralı sipariş kargoya gönderilirken hata aldı." + resp2[0].errors.ToString(), "", tempOrderNo, "", "", oCompany);
-
-                                    foreach (var item in resp2[0].errors)
-                                    {
-                                        setLog("4", "E", tempOrderNo + " numaralı sipariş kargoya gönderilirken hata aldı." + "Code:" + item.code + "Desc:" + item.description + "Msg:" + item.message, "", tempOrderNo, "", "", oCompany);
-                                    }
-                                }
-                                #endregion
-
-
-                            }
-                            catch (Exception ex)
-                            {
-                                oDocs.UserFields.Fields.Item("U_AktarimDurum").Value = "1";
-                                var r = oDocs.Update();
-                                setLog("4", "E", tempOrderNo + " numaralı sipariş kargoya gönderilirken hata aldı." + ex.Message.ToString(), "", tempOrderNo, "", "", oCompany);
-                            }
-
-                            #endregion Kargo Gönderimi
 
                             #region Mail ile bildirim
 
@@ -908,7 +940,7 @@ namespace ZwillingCevaWebService.SAPLayer
 
                         oStockTransfer.Lines.ItemCode = item.ProductNumber;
 
-                        oStockTransfer.UserFields.Fields.Item("U_DonRef").Value = GoodIssue.OrderNumber.ToString();
+                        oStockTransfer.UserFields.Fields.Item("U_DonRef").Value = GoodIssue.OrderNumber.ToString().Replace("Y","");
 
                         oStockTransfer.Lines.Add();
                     }
@@ -1434,6 +1466,30 @@ namespace ZwillingCevaWebService.SAPLayer
             raporTablosu += "</table>" + Environment.NewLine;
 
             return raporTablosu;
+        }
+
+        public static void WriteToFile(string Message)
+        {
+            string path = AppDomain.CurrentDomain.BaseDirectory + "\\MNG_CEVA_KARGO";
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            string filepath = AppDomain.CurrentDomain.BaseDirectory + "\\MNG_CEVA_KARGO\\MngCevaKargoLog_" + DateTime.Now.Date.ToShortDateString().Replace('/', '_') + ".txt";
+            if (!File.Exists(filepath))
+            {
+                using (StreamWriter sw = File.CreateText(filepath))
+                {
+                    sw.WriteLine(Message);
+                }
+            }
+            else
+            {
+                using (StreamWriter sw = File.AppendText(filepath))
+                {
+                    sw.WriteLine(Message);
+                }
+            }
         }
     }
 }

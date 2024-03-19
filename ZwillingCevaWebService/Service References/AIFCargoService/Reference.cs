@@ -52,10 +52,10 @@ namespace ZwillingCevaWebService.AIFCargoService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/CreateOrderToMNG", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        ZwillingCevaWebService.AIFCargoService.MNGCreateOrderResponse[] CreateOrderToMNG(ZwillingCevaWebService.AIFCargoService.MNGTokenRequest mngTokenRequest, ZwillingCevaWebService.AIFCargoService.MNGCreateOrderRequest[] mngCreateOrderRequest);
+        ZwillingCevaWebService.AIFCargoService.MNGCreateOrderResponse[] CreateOrderToMNG(ZwillingCevaWebService.AIFCargoService.MNGTokenRequest mngTokenRequest, ZwillingCevaWebService.AIFCargoService.MNGCreateOrderRequest mngCreateOrderRequest);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/CreateOrderToMNG", ReplyAction="*")]
-        System.Threading.Tasks.Task<ZwillingCevaWebService.AIFCargoService.MNGCreateOrderResponse[]> CreateOrderToMNGAsync(ZwillingCevaWebService.AIFCargoService.MNGTokenRequest mngTokenRequest, ZwillingCevaWebService.AIFCargoService.MNGCreateOrderRequest[] mngCreateOrderRequest);
+        System.Threading.Tasks.Task<ZwillingCevaWebService.AIFCargoService.MNGCreateOrderResponse[]> CreateOrderToMNGAsync(ZwillingCevaWebService.AIFCargoService.MNGTokenRequest mngTokenRequest, ZwillingCevaWebService.AIFCargoService.MNGCreateOrderRequest mngCreateOrderRequest);
     }
     
     /// <remarks/>
@@ -192,6 +192,8 @@ namespace ZwillingCevaWebService.AIFCargoService {
         
         private string shipperBranchCodeField;
         
+        private Error errorField;
+        
         private Error[] errorsField;
         
         /// <remarks/>
@@ -231,7 +233,19 @@ namespace ZwillingCevaWebService.AIFCargoService {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+        public Error error {
+            get {
+                return this.errorField;
+            }
+            set {
+                this.errorField = value;
+                this.RaisePropertyChanged("error");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(Order=4)]
         public Error[] errors {
             get {
                 return this.errorsField;
@@ -260,7 +274,7 @@ namespace ZwillingCevaWebService.AIFCargoService {
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://tempuri.org/")]
     public partial class Recipient : object, System.ComponentModel.INotifyPropertyChanged {
         
-        private int customerIdField;
+        private string customerIdField;
         
         private string refCustomerIdField;
         
@@ -290,7 +304,7 @@ namespace ZwillingCevaWebService.AIFCargoService {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public int customerId {
+        public string customerId {
             get {
                 return this.customerIdField;
             }
@@ -2557,11 +2571,11 @@ namespace ZwillingCevaWebService.AIFCargoService {
             return base.Channel.CreatePDFAsync(docEntry);
         }
         
-        public ZwillingCevaWebService.AIFCargoService.MNGCreateOrderResponse[] CreateOrderToMNG(ZwillingCevaWebService.AIFCargoService.MNGTokenRequest mngTokenRequest, ZwillingCevaWebService.AIFCargoService.MNGCreateOrderRequest[] mngCreateOrderRequest) {
+        public ZwillingCevaWebService.AIFCargoService.MNGCreateOrderResponse[] CreateOrderToMNG(ZwillingCevaWebService.AIFCargoService.MNGTokenRequest mngTokenRequest, ZwillingCevaWebService.AIFCargoService.MNGCreateOrderRequest mngCreateOrderRequest) {
             return base.Channel.CreateOrderToMNG(mngTokenRequest, mngCreateOrderRequest);
         }
         
-        public System.Threading.Tasks.Task<ZwillingCevaWebService.AIFCargoService.MNGCreateOrderResponse[]> CreateOrderToMNGAsync(ZwillingCevaWebService.AIFCargoService.MNGTokenRequest mngTokenRequest, ZwillingCevaWebService.AIFCargoService.MNGCreateOrderRequest[] mngCreateOrderRequest) {
+        public System.Threading.Tasks.Task<ZwillingCevaWebService.AIFCargoService.MNGCreateOrderResponse[]> CreateOrderToMNGAsync(ZwillingCevaWebService.AIFCargoService.MNGTokenRequest mngTokenRequest, ZwillingCevaWebService.AIFCargoService.MNGCreateOrderRequest mngCreateOrderRequest) {
             return base.Channel.CreateOrderToMNGAsync(mngTokenRequest, mngCreateOrderRequest);
         }
     }

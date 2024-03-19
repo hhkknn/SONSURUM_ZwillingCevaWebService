@@ -73,7 +73,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="Service References\AIFCargoService\AIFCargoWebServices.wsdl" />
+    <None Include="Service References\AIFCargoService\AIFCargoWebServices1.disco" />
     <Content Include="Service References\AIFCargoService\ZwillingCevaWebService.AIFCargoService.Crystal.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Content>
@@ -92,8 +92,8 @@
     <Content Include="Service References\AIFCargoService\ZwillingCevaWebService.AIFCargoService.YKOrderResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Content>
+    <None Include="Service References\AIFCargoService\AIFCargoWebServices1.wsdl" />
     <None Include="Service References\CevaWMSQa\service1.disco" />
-    <None Include="Service References\AIFCargoService\AIFCargoWebServices.disco" />
     <None Include="Service References\AIFCargoService\configuration91.svcinfo" />
     <None Include="Service References\AIFCargoService\configuration.svcinfo" />
     <None Include="Service References\AIFCargoService\Reference.svcmap">
