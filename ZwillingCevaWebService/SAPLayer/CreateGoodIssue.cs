@@ -298,7 +298,7 @@ namespace ZwillingCevaWebService.SAPLayer
 
                             SAPbobsCOM.Recordset oRS_MNG1 = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
                             //string RDR1 = "select \"T0.CodeBars\",\"T0.ItemName\" from RDR1 T0 Where T0.DocEntry = '" + OrderNo + "'";
-                            string RDR1_MNG = "select T0.\"CodeBars\",T0.\"Dscription\" from RDR1 T0 Where T0.DocEntry = '" + OrderNo + "'";
+                            string RDR1_MNG = "select T0.\"ItemCode\",T0.\"CodeBars\",T0.\"Dscription\" from RDR1 T0 Where T0.DocEntry = '" + OrderNo + "'";
 
                             oRS_MNG1.DoQuery(RDR1_MNG);
                             orderPieceList_MNG = new List<AIFCargoService.OrderPieceList>();
@@ -314,7 +314,7 @@ namespace ZwillingCevaWebService.SAPLayer
                                     //    content = oRS1.Fields.Item("Dscription").Value.ToString(),//zorunlu 
                                     //});
 
-                                    orderPiece_MNG.barcode = oRS_MNG1.Fields.Item("CodeBars").Value.ToString();//zorunlu 
+                                    orderPiece_MNG.barcode = oRS_MNG1.Fields.Item("CodeBars").Value.ToString() == "" ? oRS_MNG1.Fields.Item("ItemCode").Value.ToString() : oRS_MNG1.Fields.Item("CodeBars").Value.ToString();//zorunlu 
                                                                                                                //desi = 2,
                                                                                                                //kg = 1,
 
@@ -336,12 +336,12 @@ namespace ZwillingCevaWebService.SAPLayer
                             request_MNG.recipient.cityName = oRS_MNG.Fields.Item("İl").Value.ToString(); //zorunlu değil
                             request_MNG.recipient.districtName = oRS_MNG.Fields.Item("İlce").Value.ToString(); //zorunlu değil
                                                                                                                //request.recipient.districtCode = 0;
-                            request_MNG.recipient.address = oRS_MNG.Fields.Item("Adres").Value.ToString(); //zorunlu değil
+                            request_MNG.recipient.address = oRS_MNG.Fields.Item("Adres").Value.ToString().Length > 100 ? oRS_MNG.Fields.Item("Adres").Value.ToString().Substring(0,100) : oRS_MNG.Fields.Item("Adres").Value.ToString(); //zorunlu değil
                                                                                                            //request.recipient.bussinessPhoneNumber = "";
                                                                                                            //request.recipient.email = "";
                                                                                                            //request.recipient.taxOffice = "";
                                                                                                            //request.recipient.taxNumber = "";
-                            request_MNG.recipient.fullName = oRS_MNG.Fields.Item("U_AliciAdi").Value.ToString();//zorunlu değil
+                            request_MNG.recipient.fullName = oRS_MNG.Fields.Item("U_AliciAdi").Value.ToString() == "" ? oRS_MNG.Fields.Item("CardName").Value.ToString() : oRS_MNG.Fields.Item("U_AliciAdi").Value.ToString();//zorunlu değil
                                                                                                                 //request.recipient.homePhoneNumber = "";
                             request_MNG.recipient.mobilePhoneNumber = oRS_MNG.Fields.Item("U_AliciTelefon").Value.ToString() == "" ? "0" : oRS_MNG.Fields.Item("U_AliciTelefon").Value.ToString();//zorunlu değil
 
