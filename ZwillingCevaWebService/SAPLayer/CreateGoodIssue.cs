@@ -265,7 +265,7 @@ namespace ZwillingCevaWebService.SAPLayer
                             #endregion
                             #region MNG CANLI ORTAM
                             login_MNG.customerNumber = "251871723";
-                            login_MNG.password = "Murat123.";
+                            login_MNG.password = "Murat987.";
                             login_MNG.identityType = "1";
                             #endregion
                             SAPbobsCOM.Recordset oRS_MNG = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
